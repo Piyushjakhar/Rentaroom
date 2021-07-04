@@ -1,17 +1,14 @@
-var mysql = require('mysql')
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'dbuser',
-  password: 'password',
-  database: 'rentaroom'
+const mongoose = require('mongoose');
+const URL = "mongodb+srv://dbUser:dbpassword@cluster0.gkjaq.mongodb.net/rentaroom?retryWrites=true&w=majority"
+const parameters = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
+
+mongoose.connect(URL,parameters)
+.then(()=>{
+    console.log("connected to database");
 })
-
-connection.connect()
-
-connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
-  if (err) throw err
-
-  console.log('The solution is: ', rows[0].solution)
+.catch ((err)=>{
+    console.log(`Error connecting to database \n${err}`);
 })
-
-connection.end()
