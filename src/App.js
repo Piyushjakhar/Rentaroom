@@ -1,10 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
-
+import Home from "./components/Home";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './mysass.scss'
 function App() {
   return (
     <div className="App">
-      <h1>Hello from Rentaroom!!</h1>
+      
+      <Home />
       
     </div>
   );
