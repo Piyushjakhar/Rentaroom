@@ -8,7 +8,7 @@ export default class Home extends Component {
             <>
             <Container>
                 <Navbar expand="lg">
-                <Navbar.Brand href="#home">Rentaroom.com</Navbar.Brand>
+                <Navbar.Brand href="#home"><strong>Rentaroom.com</strong></Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse className="justify-content-end">
                     <Nav>
