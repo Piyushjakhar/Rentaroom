@@ -14,10 +14,10 @@ export default class Home extends Component {
                     <Nav>
                         <Nav.Link href="#home">Home</Nav.Link>
                         <Nav.Link href="#features">Features</Nav.Link>
-                        <Nav.Link href="#pricing">Pricing</Nav.Link>
+                        <Nav.Link href="#pricing">Post your Property</Nav.Link>
                     </Nav>
                     <Nav>
-                    <Nav.Link>
+                    <Nav.Link href="/login">
                         Login <i className="fas fa-sign-in-alt"></i>
                     </Nav.Link>
                     </Nav>
