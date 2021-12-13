@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var usersDB = require('../db/users');
 var genFunctions = require('../utility/genFunctions');
 
 router.post("/", (req, res) => {
