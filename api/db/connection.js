@@ -1,18 +1,19 @@
-//Db Setup
+// Db Setup
 var mysql = require('mysql')
 var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  port: 4000,
-  password: '',
-  database: 'roomrent'
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "rentroom"
 })
 
-connection.connect()
+connection.connect((err) => {
+  if (err) {
+    console.log('Error connecting to Db');
+  }
+  else {
+    console.log('Connection established');
+  }
+})
 
-var queryProcess = () => {
-  connection.query('SELECT * FROM room', function (error, results, fields) {
-    if (error) throw error
-    console.log(results)
-  })
-} 
+module.exports = connection;
