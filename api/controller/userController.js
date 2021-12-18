@@ -1,13 +1,14 @@
 var genFunctions = require('../utility/genFunctions');
 const connection = require('../db/connection');
 var status_code = require('../utility/statusCodes');
+const {encryptPassword} = require('../utility/encryption');
 
 // check if user already exist
 var checkOrAddUser = (req, res) => {
     var obj = req.body;
     var name = obj.name;
     var email = obj.email;
-    var password = obj.password;
+    var password = encryptPassword(obj.password);
     var phone = obj.phone;
 
     let tempsql = "SELECT count(*) as no_of_users from user where phone=? AND deleted_at IS NULL";
@@ -89,6 +90,7 @@ var checkOrDeleteUser = (req, res) => {
     })
 }
 
+// delete user
 var deleteUser = (req, res, sql) => {
     connection.query(sql, (err, rows) => {
         if (err) {
