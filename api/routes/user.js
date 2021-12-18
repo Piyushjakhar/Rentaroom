@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var {addNewUser, getAllUsers, getUserDetails} = require('../controller/userController');
+var {checkOrAddUser, getAllUsers, getUserDetails} = require('../controller/userController');
 
 
 // user routes
-router.post("/", addNewUser);
+router.post("/", checkOrAddUser);
 router.get('/', getAllUsers);
 router.get('/:id', getUserDetails);
 
