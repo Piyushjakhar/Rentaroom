@@ -10,7 +10,7 @@ var checkOrAddUser = (req, res) => {
     var password = obj.password;
     var phone = obj.phone;
 
-    let tempsql = "SELECT count(*) as no_of_users from user where phone=?";
+    let tempsql = "SELECT count(*) as no_of_users from user where phone=? AND deleted_at IS NULL";
 
     connection.query(tempsql, [phone],(err, rows) => {
         if(err) {
@@ -41,27 +41,64 @@ var addNewUser = (req, res, sql) => {
 
 // get list of all the users
 var getAllUsers = (req, res) => {
-    connection.query("SELECT * from User",  (err, rows, fields) => {
+    connection.query("SELECT id,name,email,phone,password,property_id from User",  (err, rows) => {
         if (!err) {
-            res.send(rows);
-
+            genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, rows);
+        }
+        else {
+            genFunctions.sendResponse(err, status_code.HTTP_404_BAD_REQUEST, req,res, null);
         }
     });
 }
 
 // get particular user details
 var getUserDetails = (req, res) => {
-    var id  = req.params.id;
-    let sql = "SELECT * from user where id=?"
-    connection.query(sql, id, (req,res) => {
-        res.send("x");
+    var id  = req.body.id;
+    let sql = "SELECT id,name,email,phone,password,property_id from user where id=?"
+    connection.query(sql, [id], (err,rows) => {
+        if (err) {
+            genFunctions.sendResponse(err, status_code.HTTP_404_BAD_REQUEST, req, res, null);
+        }
+        else {
+            if (rows.length >0) {
+            genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, rows);
+            }
+            else {
+                genFunctions.sendResponse(null, status_code.HTTP_400_NOT_FOUND, req, res, {"message": "User not found!!"});
+            }
+        }
     })
 }
 
-var deleteUser = (req, res) => {
-    var id = req.params.id;
+var checkOrDeleteUser = (req, res) => {
+    var id = req.body.id;
+    let tempsql = "SELECT count(*) as no_of_users from user where id=? AND deleted_at IS NULL";
+    connection.query(tempsql, [id], (err, rows) => {
+        if (err) {
+            genFunctions.sendResponse(err, status_code.HTTP_400_NOT_FOUND, req, res, null);
+        }
+        else {
+            if (rows[0].no_of_users == 0) {
+                genFunctions.sendResponse(null, status_code.HTTP_400_NOT_FOUND, req, res, {"message": "User Does not exist!"});
+            }
+            else {
+                let sql = `UPDATE User set deleted_at = CURRENT_TIMESTAMP where id=${id}`;
+                deleteUser(req, res, sql);
+            }
+        }
+    })
+}
 
+var deleteUser = (req, res, sql) => {
+    connection.query(sql, (err, rows) => {
+        if (err) {
+            genFunctions.sendResponse(err, status_code.HTTP_404_BAD_REQUEST, req, res, null);
+        }
+        else {
+            genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, {"message": "User deleted successfully!"});
+        }
+    });
 }
 
 
-module.exports = {checkOrAddUser, getAllUsers, getUserDetails};
+module.exports = {checkOrAddUser, getAllUsers, getUserDetails, checkOrDeleteUser};

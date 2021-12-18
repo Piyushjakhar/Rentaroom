@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var {checkOrAddUser, getAllUsers, getUserDetails} = require('../controller/userController');
+var {checkOrAddUser, getAllUsers, getUserDetails, checkOrDeleteUser} = require('../controller/userController');
 
 
 // user routes
 router.post("/", checkOrAddUser);
 router.get('/', getAllUsers);
-router.get('/:id', getUserDetails);
+router.get('/', getUserDetails);
+router.delete('/', checkOrDeleteUser);
 
 
 module.exports = function (app) {
