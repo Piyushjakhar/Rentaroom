@@ -1,15 +1,15 @@
 var genFunctions = {};
 
-genFunctions.sendResponse = function (err, req, res, data) {
+genFunctions.sendResponse = function (err, status, req, res, data) {
     if (err) {
-        if (err.status == 1)
-            res.status(500);
-        else
-            res.status(400);
-        res.send(err);
+        res.status(status).json({
+            "error": err
+        })
+
     }
     else {
-        res.send(data);
+        res.status(status).json(data);
+
     }
     res.end();
 };
