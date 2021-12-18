@@ -1,47 +1,34 @@
-var genFunctions = require('../utility/genFunctions');
+const genFunctions = require('../utility/genFunctions');
 const connection = require('../db/connection');
-var status_code = require('../utility/statusCodes');
+const status_code = require('../utility/statusCodes');
 const {encryptPassword} = require('../utility/encryption');
+const {generateToken} = require('../utility/authentication');
 
-// check if user already exist
-var checkOrAddUser = (req, res) => {
+
+// register a new user
+const registerUser = (req, res) => {
     var obj = req.body;
     var name = obj.name;
     var email = obj.email;
     var password = encryptPassword(obj.password);
     var phone = obj.phone;
 
-    let tempsql = "SELECT count(*) as no_of_users from user where phone=? AND deleted_at IS NULL";
+    let tempsql = `INSERT INTO user (name, email, password, phone) values ("${name}","${email}","${password}","${phone}")`;
 
-    connection.query(tempsql, [phone],(err, rows) => {
+    connection.query(tempsql,(err, rows) => {
         if(err) {
             genFunctions.sendResponse(err, status_code.HTTP_400_NOT_FOUND, req, res, null);
         }
-        else if (rows[0].no_of_users > 0) {
-            genFunctions.sendResponse(null, status_code.HTTP_404_BAD_REQUEST, req, res, {"message": "User already registered!"})
-        }
         else {
-            let tempsql = `INSERT INTO user (name, email, password, phone) values ("${name}","${email}","${password}","${phone}")`;
-            addNewUser(req, res, tempsql);
+            genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, {"message": "User added successfully"});
         }
 
     });
 }
 
-// add a new user
-var addNewUser = (req, res, sql) => {
-
-    connection.query(sql,(err) => {
-        if (err) {
-            genFunctions.sendResponse(err, status_code.HTTP_400_NOT_FOUND, req, res, null);
-        } else {
-            genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, {"message": "User added successfully"});
-        }
-});
-}
 
 // get list of all the users
-var getAllUsers = (req, res) => {
+const getAllUsers = (req, res) => {
     connection.query("SELECT id,name,email,phone,password,property_id from User",  (err, rows) => {
         if (!err) {
             genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, rows);
@@ -53,7 +40,7 @@ var getAllUsers = (req, res) => {
 }
 
 // get particular user details
-var getUserDetails = (req, res) => {
+const getUserDetails = (req, res) => {
     var id  = req.body.id;
     let sql = "SELECT id,name,email,phone,password,property_id from user where id=?"
     connection.query(sql, [id], (err,rows) => {
@@ -71,36 +58,30 @@ var getUserDetails = (req, res) => {
     })
 }
 
-var checkOrDeleteUser = (req, res) => {
-    var id = req.body.id;
-    let tempsql = "SELECT count(*) as no_of_users from user where id=? AND deleted_at IS NULL";
-    connection.query(tempsql, [id], (err, rows) => {
-        if (err) {
-            genFunctions.sendResponse(err, status_code.HTTP_400_NOT_FOUND, req, res, null);
-        }
-        else {
-            if (rows[0].no_of_users == 0) {
-                genFunctions.sendResponse(null, status_code.HTTP_400_NOT_FOUND, req, res, {"message": "User Does not exist!"});
-            }
-            else {
-                let sql = `UPDATE User set deleted_at = CURRENT_TIMESTAMP where id=${id}`;
-                deleteUser(req, res, sql);
-            }
-        }
-    })
-}
-
 // delete user
-var deleteUser = (req, res, sql) => {
-    connection.query(sql, (err, rows) => {
+const deleteUser = (req, res) => {
+    var id = req.body.id;
+    let sql = `UPDATE User set deleted_at = CURRENT_TIMESTAMP where id=${id}`;
+    connection.query(sql, [id], (err, rows) => {
         if (err) {
             genFunctions.sendResponse(err, status_code.HTTP_404_BAD_REQUEST, req, res, null);
         }
         else {
             genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, {"message": "User deleted successfully!"});
         }
-    });
+    })
 }
 
+const loginUser = (req, res) => {
+    const phone = req.body.phone;
+    const password = encryptPassword(req.body.password);
 
-module.exports = {checkOrAddUser, getAllUsers, getUserDetails, checkOrDeleteUser};
+    const token = generateToken({
+        "phone": phone,
+        "password": password
+    })
+
+    genFunctions.sendResponse(null, status_code.HTTP_200_OK, req, res, {"token": token});
+}
+
+module.exports = {registerUser, getAllUsers, getUserDetails, deleteUser, loginUser};
