@@ -13,7 +13,7 @@ const registerUser = (req, res) => {
     var password = encryptPassword(obj.password);
     var phone = obj.phone;
 
-    let tempsql = `INSERT INTO user (name, email, password, phone) values ("${name}","${email}","${password}","${phone}")`;
+    let tempsql = `INSERT INTO User (name, email, password, phone) values ("${name}","${email}","${password}","${phone}")`;
 
     connection.query(tempsql,(err, rows) => {
         if(err) {
@@ -42,7 +42,7 @@ const getAllUsers = (req, res) => {
 // get particular user details
 const getUserDetails = (req, res) => {
     var id  = req.body.id;
-    let sql = "SELECT id,name,email,phone,password,property_id from user where id=?"
+    let sql = "SELECT id,name,email,phone,password,property_id from User where id=?"
     connection.query(sql, [id], (err,rows) => {
         if (err) {
             genFunctions.sendResponse(err, status_code.HTTP_404_BAD_REQUEST, req, res, null);
