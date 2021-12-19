@@ -1,10 +1,11 @@
 // Db Setup
 var mysql = require('mysql')
 var connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
+  host: "roomrent.c3wkr8skvnth.us-east-2.rds.amazonaws.com",
+  user: "admin",
   password: "password",
-  database: "rentroom"
+  database: "roomrent",
+  port: 3306
 })
 
 connection.connect((err) => {
