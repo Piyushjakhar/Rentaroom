@@ -6,8 +6,8 @@ const loginValidation = (req, res, next) => {
     const body = req.body;
 
         const schema = Joi.object({
-            email: Joi.string().email().required(),
-            password: Joi.min(6).max(12).required()
+            phone: Joi.string().min(10).max(10).required(),
+            password: Joi.string().min(6).max(12).required()
         })
         const {error, value} = schema.validate(body);
         if (error == null) {
