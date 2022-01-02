@@ -14,5 +14,5 @@ app.get('/', (req,res)=> {
     res.send("API is up and running!");
 })
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 
