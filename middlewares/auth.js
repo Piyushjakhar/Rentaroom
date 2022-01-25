@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {SECRET_KEY} = require("../keys");
+const {SECRET_KEY} = require("../utility/keys");
 const genFunctions = require("../utility/genFunctions");
 const status_code = require('../utility/statusCodes');
 
