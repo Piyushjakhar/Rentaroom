@@ -1,11 +1,13 @@
 // Db Setup
+const keys = require('../utility/keys')
+
 var mysql = require('mysql')
 var connection = mysql.createConnection({
-  host: "roomrent.c3wkr8skvnth.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "password",
-  database: "roomrent",
-  port: 3306
+  host: keys.DB_HOST,
+  user: keys.DB_USERNAME,
+  password: keys.DB_PASSWORD,
+  database: keys.DATABASE,
+  port: keys.DB_PORT
 })
 
 connection.connect((err) => {
