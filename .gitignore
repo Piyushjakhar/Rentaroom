@@ -7,6 +7,8 @@
 
 /utility/keys.js
 
+.env
+
 # testing
 /coverage
 

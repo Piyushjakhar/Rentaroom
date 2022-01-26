@@ -1,18 +1,20 @@
 // Db Setup
-const keys = require('../utility/keys')
+require('dotenv').config()
+
 
 var mysql = require('mysql')
 var connection = mysql.createConnection({
-  host: keys.DB_HOST,
-  user: keys.DB_USERNAME,
-  password: keys.DB_PASSWORD,
-  database: keys.DATABASE,
-  port: keys.DB_PORT
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DATABASE,
+  port: process.env.DB_PORT
 })
 
 connection.connect((err) => {
   if (err) {
     console.log('Error connecting to Db');
+    console.log(err);
   }
   else {
     console.log('Connection established');
