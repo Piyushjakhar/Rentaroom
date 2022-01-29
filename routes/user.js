@@ -11,7 +11,7 @@ router.post("/register", registerValidation, userRegisterMiddleware, registerUse
 router.get('/', getAllUsers);
 router.get('/details', verifyToken, getUserDetails);
 router.delete('/', verifyToken, userDeletionMiddleware, deleteUser);
-router.get('/login', loginValidation, loginUserMiddleware, loginUser)
+router.post('/login', loginValidation, loginUserMiddleware, loginUser)
 
 
 module.exports = function (app) {
