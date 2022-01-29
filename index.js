@@ -1,11 +1,14 @@
 const express = require('express');
+const cors = require('cors')
 const bodyParser = require('body-parser');
 
 
-var app = express();
+const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname));
+app.use(cors())
 
 require('./routes/property')(app);
 require('./routes/user')(app);
